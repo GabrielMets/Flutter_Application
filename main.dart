@@ -1,33 +1,27 @@
 import 'package:flutter/material.dart';
 
-
-
 void main() {
-
   runApp(Engegov());
 }
 
 class Engegov extends StatelessWidget {
   const Engegov({super.key});
 
-
   @override
   Widget build(BuildContext context) {
-    return
-      MaterialApp(
-        home:  Scaffold(
-          body: ListaTransferencia(),
+    return MaterialApp(
+      home: Scaffold(
+        body: ListaTransferencia(),
 
-          //FormularioTransferencia(),
-        ),
-
-      );
+        //FormularioTransferencia(),
+      ),
+    );
   }
 }
 
-class FormularioTransferencia extends StatelessWidget{
-
-  final TextEditingController _controladorCampoNomeConta = TextEditingController();
+class FormularioTransferencia extends StatelessWidget {
+  final TextEditingController _controladorCampoNomeConta =
+      TextEditingController();
   final TextEditingController _controladorCampoValor = TextEditingController();
 
   FormularioTransferencia({super.key});
@@ -35,28 +29,38 @@ class FormularioTransferencia extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
+      body: SingleChildScrollView(
+        child: Column(
           children: [
-
-          Appbarclass('Nova transação'),
-
-          Editor(controlador: _controladorCampoNomeConta, rotulo:  'Seu nome:', dica:  ' Fulano de Tal', icone:  Icons.account_box),
-          Editor(controlador: _controladorCampoValor, rotulo: 'Valor desejado:', dica:  ' R\$ 1.000,00',icone:  Icons.account_balance_wallet, teclado: TextInputType.number),
-
-
+            Appbarclass('Nova transação'),
+        
+            Editor(
+              controlador: _controladorCampoNomeConta,
+              rotulo: 'Seu nome:',
+              dica: ' Fulano de Tal',
+              icone: Icons.account_box,
+            ),
+            Editor(
+              controlador: _controladorCampoValor,
+              rotulo: 'Valor desejado:',
+              dica: ' R\$ 1.000,00',
+              icone: Icons.account_balance_wallet,
+              teclado: TextInputType.number,
+            ),
+        
             ElevatedButton(
-                onPressed: () {
+              onPressed: () {
                 _criarTransferencia(context);
-
-            },
-            child: Text('Confimar'))
+              },
+              child: Text('Confimar'),
+            ),
           ],
-
-        ));
+        ),
+      ),
+    );
   }
 
   void _criarTransferencia(BuildContext context) {
-
     final String nomeUsuario = _controladorCampoNomeConta.text;
     String valorSemV = _controladorCampoValor.text;
 
@@ -64,77 +68,84 @@ class FormularioTransferencia extends StatelessWidget{
     valorSemV = valorSemV.replaceAll(',', '.');
     final double? valor = double.tryParse(valorSemV);
 
+    if (nomeUsuario != '' && valor != null) {
+      final transferenciaCriada = Transferencia(nomeUsuario, valor);
 
-    if(nomeUsuario != '' && valor != null){
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('$transferenciaCriada')));
 
-        final transferenciaCriada = Transferencia(nomeUsuario, valor);
-
-        
+      Navigator.pop(context, transferenciaCriada);
+      debugPrint('Criando transferencia');
+    } else {
+      if (nomeUsuario == '') {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('$transferenciaCriada'), ), );
-
-        Navigator.pop(context, transferenciaCriada);
-        debugPrint('Criando transferencia');
-      } else{
-      if(nomeUsuario == ''){
+            content: Text('Entrada no nome de Usuario invalida ou em branco.'),
+          ),
+        );
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Entrada no nome de Usuario invalida ou em branco.')));
-      } else{
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Entrada no valor desejado invalida ou em branco.')));
+          SnackBar(
+            content: Text('Entrada no valor desejado invalida ou em branco.'),
+          ),
+        );
       }
-
-      }
+    }
   }
 }
 
+class ListaTransferencia extends StatefulWidget {
+  final List<Transferencia> _transferencias = [];
 
+  @override
+  State<StatefulWidget> createState() {
+    return ListaTransferenciaState();
+  }
+}
 
-
-
-
-
-
-class ListaTransferencia extends StatelessWidget{
-  const ListaTransferencia({super.key});
-
+class ListaTransferenciaState extends State<ListaTransferencia> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-
-          Appbarclass('Engegov'),
-
-          ItemTransferencia('Carteira', 'Pagamento', Icons.account_balance_wallet),
-          ItemTransferencia('Photo', 'Adicionar', Icons.add_a_photo),
-          ItemTransferencia('Perfil', 'Configurações', Icons.account_box),
-
-        ],
+      appBar: Appbarclass('EngeGov'),
+      body: ListView.builder(
+        itemCount: widget._transferencias.length,
+        itemBuilder: (context, indice) {
+          final transferencia = widget._transferencias[indice];
+          return ItemTransferencia(
+            transferencia.nomeUsuario,
+            'R\$ ${transferencia.valor.toStringAsFixed(2)}',
+            Icons.account_box,
+          );
+        },
       ),
 
-      floatingActionButton: FloatingActionButton(onPressed: () {
-
-        final Future<Transferencia?> future = Navigator.push(context, MaterialPageRoute(builder: (context){
-          return FormularioTransferencia();
-        })
-        );
-        future.then((transferenciaRecebida){
-          debugPrint('entrou no then');
-          debugPrint('$transferenciaRecebida');
-        });
-      },
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          final Future<Transferencia?> future = Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return FormularioTransferencia();
+              },
+            ),
+          );
+          future.then((transferenciaRecebida) {
+            debugPrint('entrou no then');
+            debugPrint('$transferenciaRecebida');
+            if (transferenciaRecebida != null) {
+              setState(() {
+                widget._transferencias.add(transferenciaRecebida);
+              });
+            }
+          });
+        },
         child: Icon(Icons.add_circle),
       ),
-
-
-
     );
   }
 }
-
-
 
 class ItemTransferencia extends StatelessWidget {
   final String title;
@@ -146,15 +157,16 @@ class ItemTransferencia extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-        child: ListTile(
-          title: Text(title),
-          subtitle: Text(subtitle),
-          leading: Icon(icone),
-        ));
+      child: ListTile(
+        title: Text(title),
+        subtitle: Text(subtitle),
+        leading: Icon(icone),
+      ),
+    );
   }
 }
 
-class Transferencia{
+class Transferencia {
   final String nomeUsuario;
   final double valor;
 
@@ -173,8 +185,14 @@ class Editor extends StatelessWidget {
   final IconData? icone;
   final TextInputType? teclado;
 
-  const Editor({super.key, this.controlador, this.rotulo, this.dica, this.icone,  this.teclado});
-
+  const Editor({
+    super.key,
+    this.controlador,
+    this.rotulo,
+    this.dica,
+    this.icone,
+    this.teclado,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -182,35 +200,32 @@ class Editor extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: TextField(
         controller: controlador,
-        style: TextStyle(
-            fontSize: 24.0),
+        style: TextStyle(fontSize: 24.0),
         decoration: InputDecoration(
-            icon: icone != null ? Icon(icone) : null,
-            labelText: rotulo,
-            hintText: dica),
+          icon: icone != null ? Icon(icone) : null,
+          labelText: rotulo,
+          hintText: dica,
+        ),
         keyboardType: teclado,
       ),
     );
   }
 }
 
-class Appbarclass extends StatelessWidget {
-
-
+class Appbarclass extends StatelessWidget implements PreferredSizeWidget {
   final String _textappbar;
-
 
   const Appbarclass(this._textappbar, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    return
-
-      AppBar(
-        backgroundColor: Colors.orangeAccent,
-        title: Text(_textappbar),//Text('EngeGov'),
-        centerTitle: true,
-      );
-
+    return AppBar(
+      backgroundColor: Colors.orangeAccent,
+      title: Text(_textappbar),
+      centerTitle: true,
+    );
   }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
