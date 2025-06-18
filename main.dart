@@ -47,8 +47,8 @@ class FormularioTransferencia extends StatelessWidget {
                 _criarTransferencia(context);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-                foregroundColor: Colors.yellowAccent,
+                backgroundColor: Color(0xFF00BCF0),
+                foregroundColor: Color(0xFFFFE556),
               ),
               child: Text('Confimar'),
             ),
@@ -73,9 +73,9 @@ class FormularioTransferencia extends StatelessWidget {
         SnackBar(
           content: Text(
             '$transferenciaCriada',
-            style: TextStyle(color: Colors.yellowAccent),
+            style: TextStyle(color: Color(0xFFFFE556)),
           ),
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: Color(0xFF00BCF0),
         ),
       );
 
@@ -87,9 +87,9 @@ class FormularioTransferencia extends StatelessWidget {
           SnackBar(
             content: Text(
               'Entrada no nome de Usuario invalida ou em branco.',
-              style: TextStyle(color: Colors.yellowAccent),
+              style: TextStyle(color: Color(0xFFFFE556)),
             ),
-            backgroundColor: Colors.blueAccent,
+            backgroundColor: Color(0xFF00BCF0),
           ),
         );
       } else {
@@ -97,9 +97,9 @@ class FormularioTransferencia extends StatelessWidget {
           SnackBar(
             content: Text(
               'Entrada no valor desejado invalida ou em branco.',
-              style: TextStyle(color: Colors.yellowAccent),
+              style: TextStyle(color: Color(0xFFFFE556)),
             ),
-            backgroundColor: Colors.blueAccent,
+            backgroundColor: Color(0xFF00BCF0),
           ),
         );
       }
@@ -154,8 +154,8 @@ class ListaTransferenciaState extends State<ListaTransferencia> {
             }
           });
         },
-        backgroundColor: Colors.blueAccent, // <--- Define a cor de fundo do FAB
-        foregroundColor: Colors.yellowAccent,
+        backgroundColor: Color(0xFF00BCF0), // <--- Define a cor de fundo do FAB
+        foregroundColor: Color(0xFFFFE556),
         child: Icon(Icons.add_circle),
       ),
     );
@@ -172,30 +172,32 @@ class ItemTransferencia extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0), // Cantos mais arredondados
-          side: BorderSide(color: Colors.yellowAccent), // Borda sutil com a cor primária do tema
-        ),
-      color: Colors.blueAccent,
-      child:
-        InkWell( // Adiciona InkWell para um efeito de toque visual (feedback)
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0), // Cantos mais arredondados
+        side: BorderSide(
+          color: Color(0xFFFFE556),
+        ), // Borda sutil com a cor primária do tema
+      ),
+      color: Color(0xFF00BCF0),
+      child: InkWell(
+        // Adiciona InkWell para um efeito de toque visual (feedback)
         onTap: () {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
                 'Usuario $title possui $subtitle na conta.',
-                style: TextStyle(color: Colors.yellowAccent),
+                style: TextStyle(color: Color(0xFFFFE556)),
               ),
-              backgroundColor: Colors.blueAccent,
+              backgroundColor: Color(0xFF00BCF0),
             ),
           );
-    },
-      child: ListTile(
-        title: Text(title, style: TextStyle(color: Colors.yellowAccent),),
-        subtitle: Text(subtitle, style: TextStyle(color: Colors.yellowAccent),),
-        leading: Icon(icone, color: Colors.yellowAccent,),
+        },
+        child: ListTile(
+          title: Text(title, style: TextStyle(color: Color(0xFFFFE556))),
+          subtitle: Text(subtitle, style: TextStyle(color: Color(0xFFFFE556))),
+          leading: Icon(icone, color: Color(0xFFFFE556)),
+        ),
       ),
-        )
     );
   }
 }
@@ -234,18 +236,18 @@ class Editor extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: TextField(
         controller: controlador,
-        style: TextStyle(fontSize: 24.0, color: Colors.yellowAccent),
+        style: TextStyle(fontSize: 24.0, color: Color(0xFFFFE556)),
         decoration: InputDecoration(
-          icon: icone != null ? Icon(icone, color: Colors.yellowAccent) : null,
+          icon: icone != null ? Icon(icone, color: Color(0xFFFFE556)) : null,
           labelText: rotulo,
-          labelStyle: TextStyle(color: Colors.blueAccent),
+          labelStyle: TextStyle(color: Color(0xFF00BCF0)),
           hintText: dica,
-          hintStyle: TextStyle(color: Colors.yellowAccent, fontSize: 10.0),
+          hintStyle: TextStyle(color: Color(0xFFFFE556), fontSize: 10.0),
           enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.yellowAccent, width: 2.0),
+            borderSide: BorderSide(color: Color(0xFFFFE556), width: 2.0),
           ),
           focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
+            borderSide: BorderSide(color: Color(0xFF00BCF0), width: 2.0),
           ),
         ),
         keyboardType: teclado,
@@ -262,10 +264,10 @@ class Appbarclass extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.blueAccent,
-      title: Text(_textappbar, style: TextStyle(color: Colors.yellowAccent)),
+      backgroundColor: Color(0xFF00BCF0),
+      title: Text(_textappbar, style: TextStyle(color: Color(0xFFFFE556))),
       centerTitle: true,
-      iconTheme: IconThemeData(color: Colors.yellowAccent),
+      iconTheme: IconThemeData(color: Color(0xFFFFE556)),
     );
   }
 
