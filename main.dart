@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -180,15 +181,21 @@ class ItemTransferencia extends StatelessWidget {
       ),
       color: Color(0xFF00BCF0),
       child: InkWell(
-        // Adiciona InkWell para um efeito de toque visual (feedback)
         onTap: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Usuario $title possui $subtitle na conta.',
-                style: TextStyle(color: Color(0xFFFFE556)),
-              ),
-              backgroundColor: Color(0xFF00BCF0),
+          showCupertinoDialog(
+            context: context,
+            builder: (BuildContext context) => CupertinoAlertDialog(
+              title: Text('$title', style: TextStyle(color: Color(0xFFFFE556))),
+              content: Text('Possui $subtitle na conta.', style: TextStyle(color: Color(0xFFFFE556))),
+              actions: [
+                CupertinoDialogAction(
+                  isDefaultAction: true,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK', style: TextStyle(color: Color(0xFF00BCF0))),
+                ),
+              ],
             ),
           );
         },
@@ -233,7 +240,7 @@ class Editor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(10.0),
       child: TextField(
         controller: controlador,
         style: TextStyle(fontSize: 24.0, color: Color(0xFFFFE556)),
