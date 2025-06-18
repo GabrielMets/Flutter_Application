@@ -9,13 +9,7 @@ class Engegov extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: ListaTransferencia(),
-
-        //FormularioTransferencia(),
-      ),
-    );
+    return MaterialApp(theme: ThemeData.dark(), home: ListaTransferencia());
   }
 }
 
@@ -33,11 +27,11 @@ class FormularioTransferencia extends StatelessWidget {
         child: Column(
           children: [
             Appbarclass('Nova transação'),
-        
+
             Editor(
               controlador: _controladorCampoNomeConta,
               rotulo: 'Seu nome:',
-              dica: ' Fulano de Tal',
+              dica: 'seu nome aqui...',
               icone: Icons.account_box,
             ),
             Editor(
@@ -47,11 +41,15 @@ class FormularioTransferencia extends StatelessWidget {
               icone: Icons.account_balance_wallet,
               teclado: TextInputType.number,
             ),
-        
+
             ElevatedButton(
               onPressed: () {
                 _criarTransferencia(context);
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blueAccent,
+                foregroundColor: Colors.yellowAccent,
+              ),
               child: Text('Confimar'),
             ),
           ],
@@ -71,9 +69,15 @@ class FormularioTransferencia extends StatelessWidget {
     if (nomeUsuario != '' && valor != null) {
       final transferenciaCriada = Transferencia(nomeUsuario, valor);
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('$transferenciaCriada')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '$transferenciaCriada',
+            style: TextStyle(color: Colors.yellowAccent),
+          ),
+          backgroundColor: Colors.blueAccent,
+        ),
+      );
 
       Navigator.pop(context, transferenciaCriada);
       debugPrint('Criando transferencia');
@@ -81,13 +85,21 @@ class FormularioTransferencia extends StatelessWidget {
       if (nomeUsuario == '') {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Entrada no nome de Usuario invalida ou em branco.'),
+            content: Text(
+              'Entrada no nome de Usuario invalida ou em branco.',
+              style: TextStyle(color: Colors.yellowAccent),
+            ),
+            backgroundColor: Colors.blueAccent,
           ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Entrada no valor desejado invalida ou em branco.'),
+            content: Text(
+              'Entrada no valor desejado invalida ou em branco.',
+              style: TextStyle(color: Colors.yellowAccent),
+            ),
+            backgroundColor: Colors.blueAccent,
           ),
         );
       }
@@ -97,6 +109,8 @@ class FormularioTransferencia extends StatelessWidget {
 
 class ListaTransferencia extends StatefulWidget {
   final List<Transferencia> _transferencias = [];
+
+  ListaTransferencia({super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -120,7 +134,6 @@ class ListaTransferenciaState extends State<ListaTransferencia> {
           );
         },
       ),
-
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           final Future<Transferencia?> future = Navigator.push(
@@ -141,6 +154,8 @@ class ListaTransferenciaState extends State<ListaTransferencia> {
             }
           });
         },
+        backgroundColor: Colors.blueAccent, // <--- Define a cor de fundo do FAB
+        foregroundColor: Colors.yellowAccent,
         child: Icon(Icons.add_circle),
       ),
     );
@@ -157,11 +172,30 @@ class ItemTransferencia extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0), // Cantos mais arredondados
+          side: BorderSide(color: Colors.yellowAccent), // Borda sutil com a cor primária do tema
+        ),
+      color: Colors.blueAccent,
+      child:
+        InkWell( // Adiciona InkWell para um efeito de toque visual (feedback)
+        onTap: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Usuario $title possui $subtitle na conta.',
+                style: TextStyle(color: Colors.yellowAccent),
+              ),
+              backgroundColor: Colors.blueAccent,
+            ),
+          );
+    },
       child: ListTile(
-        title: Text(title),
-        subtitle: Text(subtitle),
-        leading: Icon(icone),
+        title: Text(title, style: TextStyle(color: Colors.yellowAccent),),
+        subtitle: Text(subtitle, style: TextStyle(color: Colors.yellowAccent),),
+        leading: Icon(icone, color: Colors.yellowAccent,),
       ),
+        )
     );
   }
 }
@@ -200,11 +234,19 @@ class Editor extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: TextField(
         controller: controlador,
-        style: TextStyle(fontSize: 24.0),
+        style: TextStyle(fontSize: 24.0, color: Colors.yellowAccent),
         decoration: InputDecoration(
-          icon: icone != null ? Icon(icone) : null,
+          icon: icone != null ? Icon(icone, color: Colors.yellowAccent) : null,
           labelText: rotulo,
+          labelStyle: TextStyle(color: Colors.blueAccent),
           hintText: dica,
+          hintStyle: TextStyle(color: Colors.yellowAccent, fontSize: 10.0),
+          enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.yellowAccent, width: 2.0),
+          ),
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
+          ),
         ),
         keyboardType: teclado,
       ),
@@ -220,9 +262,10 @@ class Appbarclass extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.orangeAccent,
-      title: Text(_textappbar),
+      backgroundColor: Colors.blueAccent,
+      title: Text(_textappbar, style: TextStyle(color: Colors.yellowAccent)),
       centerTitle: true,
+      iconTheme: IconThemeData(color: Colors.yellowAccent),
     );
   }
 
